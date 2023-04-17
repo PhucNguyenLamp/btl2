@@ -1,4 +1,4 @@
-///TODO: main.h
+///main.h
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -9,7 +9,8 @@ using namespace std;
 
 ///TODO: knight2.h
 enum ItemType {/* TODO: */};
-
+class BaseItem;
+class Events;
 class BaseBag {
 public:
     virtual bool insertFirst(BaseItem * item);
@@ -21,20 +22,66 @@ class BaseOpponent;
 
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };
 class BaseKnight {
+    //nghich
 protected:
-    int id;
+    int id; // dinh danh
     int hp;
     int maxhp;
     int level;
-    int gil;
+    int gil; // tien
     int antidote;
-    BaseBag * bag;
-    KnightType knightType;
+    BaseBag * bag; // tui doi, 5.6
+    KnightType knightType; // loai hiep si
 
 public:
-    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
+    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+        BaseKnight *knight = new BaseKnight();
+        knight->id = id;
+        knight->hp = maxhp;
+        knight->maxhp = maxhp;
+        knight->level = level;
+        knight->gil = gil;
+        knight->antidote = antidote;
+        knight->bag = new BaseBag();
+        knight->knightType = NORMAL;
+        bool checkprime(int n){
+            if (n < 2) return false;
+            for (int i = 2; i <= sqrt(n); i++){
+                if (n % i == 0) return false;
+            }
+            return true;
+        }
+        bool check checkpythagoras(int n){
+            string number = to_string(n);
+            int length = number.length();
+            if (length < 3) return false; // hp co lon hon 1000 dc ko?
+            if (pow(stoi(number[0]),2) == pow(stoi(number[1]),2) + pow(stoi(number[2]),2) || pow(stoi(number[1]),2) == pow(stoi(number[0]),2) + pow(stoi(number[2]),2) || pow(stoi(number[2]),2) == pow(stoi(number[0]),2) + pow(stoi(number[1]),2)) return true;
+            return false;
+        }
+        if (checkprime(maxhp)){knight->knightType = PALADIN;}
+        else if (maxhp == 888){knight->knightType = LANCELOT;}
+        else if (checkpythagoras(maxhp)) {knight->knightType = DRAGON;}
+        else knight->knightType = NORMAL;
+        return knight;
+
+    }; // static nen ko can khai obj de call
+    
     string toString() const;
 };
+
+class PaladinKnight : public BaseKnight {
+
+};
+class LancelotKnight : public BaseKnight {
+
+};
+class DragonKnight : public BaseKnight {
+
+};
+class NormalKnight : public BaseKnight {
+
+};
+
 
 class ArmyKnights {
 public:
@@ -61,9 +108,27 @@ public:
 };
 
 class Events {
+private:
+    int eventsNum;
+    int *arr = new int[eventsNum];
 public:
-    int count() const;
-    int get(int i) const;
+    int count() const {
+        return eventsNum;
+    };
+    int get(int i) const {
+        return arr[i];
+    };
+    //todo cua tui hihi
+    Events(const string & file_events){
+        ifstream ifs(file_events);
+        ifs >> eventsNum;
+        for(int i = 0; i < eventsNum; i++){
+            ifs >> arr[i];
+        }
+    };
+    ~Events(){
+        delete[] arr;
+    };
 };
 
 class KnightAdventure {
@@ -134,7 +199,7 @@ KnightAdventure::KnightAdventure() {
 
 /* * * END implementation of class KnightAdventure * * */
 
-///TODO: main.cpp
+///main.cpp
 int main(int argc, char ** argv) {
     string file_armyknights, file_events;
     if (argc == 1) {
