@@ -8,7 +8,9 @@
 using namespace std;
 //knight2.h
 enum ItemType {/* TODO: */};
-
+bool isPrime(int n);
+bool checkDragon(int n);
+class BaseBag;
 class BaseItem;
 class Events;
 
@@ -20,7 +22,10 @@ public:
 };
 
 class BaseOpponent;
-
+class PaladinKnight;
+class LancelotKnight;
+class DragonKnight;
+class NormalKnight;
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };
 class BaseKnight {
 protected:
@@ -34,7 +39,21 @@ protected:
     KnightType knightType;
 
 public:
-    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
+    BaseKnight();
+    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+        if(isPrime(maxhp)){
+            return new Paladin(id, maxhp, level, gil, antidote, phoenixdownI);
+        }
+        else if(maxhp = 888){
+            return new Lancelot(id, maxhp, level, gil, antidote, phoenixdownI);
+        }
+        else if(checkDragon(maxhp)){
+            return new Dragon(id, maxhp, level, gil, antidote, phoenixdownI);
+        }
+        else {
+            return new Normal(id, maxhp, level, gil, antidote, phoenixdownI);
+        }
+    }
     string toString() const;
 };
 
@@ -91,9 +110,31 @@ class Normal : public BaseKnight {
 };
 
 class ArmyKnights {
+private:
+    BaseKnight* ptr;
+    int SoLuongHiepSi;
 public:
-    ArmyKnights (const string & file_armyknights);
-    ~ArmyKnights();
+    ArmyKnights (const string & file_armyknights){
+        fstream ifs;
+        ifs.open(file_armyknights, ios::in);
+        string line;
+        getline(ifs, line);
+        SoLuongHiepSi = stoi(line);
+        ptr = new BaseKnight[SoLuongHiepSi];    
+        for (int i=0; i<SoLuongHiepSi; i++){
+            string linee;
+            getline(ifs, linee);
+            stringstream ss(linee);
+            int hp, maxhp, level, gil, antidote, phoenixdownI;
+            ss >> hp >> maxhp >> level >> gil >> antidote >> phoenixdownI;
+            ptr[i].create(i+1, maxhp, level, gil, antidote, phoenixdownI);
+
+        }
+
+    }
+    ~ArmyKnights(){
+        delete [] ptr;
+    }
     bool fight(BaseOpponent * opponent);
     bool adventure (Events * events);
     int count() const;
