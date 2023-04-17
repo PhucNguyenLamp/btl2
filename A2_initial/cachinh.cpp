@@ -1,4 +1,4 @@
-//main.h
+///TODO: main.h
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,13 +6,9 @@
 #include <math.h>
 
 using namespace std;
-//knight2.h
+
+///TODO: knight2.h
 enum ItemType {/* TODO: */};
-bool isPrime(int n);
-bool checkDragon(int n);
-class BaseBag;
-class BaseItem;
-class Events;
 
 class BaseBag {
 public:
@@ -22,10 +18,7 @@ public:
 };
 
 class BaseOpponent;
-class PaladinKnight;
-class LancelotKnight;
-class DragonKnight;
-class NormalKnight;
+
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };
 class BaseKnight {
 protected:
@@ -39,102 +32,14 @@ protected:
     KnightType knightType;
 
 public:
-    BaseKnight();
-    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
-        if(isPrime(maxhp)){
-            return new Paladin(id, maxhp, level, gil, antidote, phoenixdownI);
-        }
-        else if(maxhp = 888){
-            return new Lancelot(id, maxhp, level, gil, antidote, phoenixdownI);
-        }
-        else if(checkDragon(maxhp)){
-            return new Dragon(id, maxhp, level, gil, antidote, phoenixdownI);
-        }
-        else {
-            return new Normal(id, maxhp, level, gil, antidote, phoenixdownI);
-        }
-    }
+    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
 };
 
-class Paladin : public BaseKnight {
-    public:
-    Paladin (int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
-        this->id = id;
-        this->maxhp = maxhp;
-        this->level = level;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->bag = nullptr;
-        this->knightType = PALADIN;
-    }
-};
-
-class Lancelot : public BaseKnight {
-    public:
-    Lancelot (int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
-        this->id = id;
-        this->maxhp = maxhp;
-        this->level = level;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->bag = nullptr;
-        this->knightType = LANCELOT;
-    }
-};
-
-class Dragon : public BaseKnight {
-    public:
-    Dragon (int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
-        this->id = id;
-        this->maxhp = maxhp;
-        this->level = level;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->bag = nullptr;
-        this->knightType = DRAGON;
-    }
-};
-
-class Normal : public BaseKnight {
-    public:
-    Normal (int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
-        this->id = id;
-        this->maxhp = maxhp;
-        this->level = level;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->bag = nullptr;
-        this->knightType = NORMAL;
-    }
-};
-
 class ArmyKnights {
-private:
-    BaseKnight* ptr;
-    int SoLuongHiepSi;
 public:
-    ArmyKnights (const string & file_armyknights){
-        fstream ifs;
-        ifs.open(file_armyknights, ios::in);
-        string line;
-        getline(ifs, line);
-        SoLuongHiepSi = stoi(line);
-        ptr = new BaseKnight[SoLuongHiepSi];    
-        for (int i=0; i<SoLuongHiepSi; i++){
-            string linee;
-            getline(ifs, linee);
-            stringstream ss(linee);
-            int hp, maxhp, level, gil, antidote, phoenixdownI;
-            ss >> hp >> maxhp >> level >> gil >> antidote >> phoenixdownI;
-            ptr[i].create(i+1, maxhp, level, gil, antidote, phoenixdownI);
-
-        }
-
-    }
-    ~ArmyKnights(){
-        delete [] ptr;
-    }
+    ArmyKnights (const string & file_armyknights);
+    ~ArmyKnights();
     bool fight(BaseOpponent * opponent);
     bool adventure (Events * events);
     int count() const;
@@ -157,26 +62,8 @@ public:
 
 class Events {
 public:
-    Events ( const string & file_events );
-    ~Events();
-    int count(string file_events) const{
-        ifstream count;
-        count.open(file_events);
-        int line1;
-        cin >> line1;
-        return line1;
-    };
-    int get(int i, string file_events) const{
-        ifstream get;
-        get.open(file_events);
-        string line2;
-        getline(get, line2);getline(get, line2);
-        stringstream ss(line2);
-        for (int j=0; j<i; j++){
-            ss >> i;
-        }
-        return i;
-    };
+    int count() const;
+    int get(int i) const;
 };
 
 class KnightAdventure {
@@ -193,8 +80,8 @@ public:
     void run();
 };
 
-//knight2.cpp
 
+///TODO: knight2.cpp
 /* * * BEGIN implementation of class BaseBag * * */
 
 /* * * END implementation of class BaseBag * * */
@@ -247,8 +134,7 @@ KnightAdventure::KnightAdventure() {
 
 /* * * END implementation of class KnightAdventure * * */
 
-//main.cpp
-
+///TODO: main.cpp
 int main(int argc, char ** argv) {
     string file_armyknights, file_events;
     if (argc == 1) {
