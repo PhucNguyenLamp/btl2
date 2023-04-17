@@ -34,6 +34,21 @@ protected:
     KnightType knightType; // loai hiep si
 
 public:
+        static bool checkprime(int n){
+            if (n < 2) return false;
+            for (int i = 2; i <= sqrt(n); i++){
+                if (n % i == 0) return false;
+            }
+            return true;
+        }
+        static bool checkpythagoras(int number){
+            if (number<100) return false; // hp co lon hon 1000 dc ko?
+            int a = pow(number/100,2);
+            int b = pow(number/10%10,2);
+            int c = pow(number%10,2);
+            if (a==b+c || b==a+c || c==a+b) return true;
+            return false;
+        }
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
         BaseKnight *knight = new BaseKnight();
         knight->id = id;
@@ -44,20 +59,6 @@ public:
         knight->antidote = antidote;
         knight->bag = new BaseBag();
         knight->knightType = NORMAL;
-        bool checkprime(int n){
-            if (n < 2) return false;
-            for (int i = 2; i <= sqrt(n); i++){
-                if (n % i == 0) return false;
-            }
-            return true;
-        }
-        bool check checkpythagoras(int n){
-            string number = to_string(n);
-            int length = number.length();
-            if (length < 3) return false; // hp co lon hon 1000 dc ko?
-            if (pow(stoi(number[0]),2) == pow(stoi(number[1]),2) + pow(stoi(number[2]),2) || pow(stoi(number[1]),2) == pow(stoi(number[0]),2) + pow(stoi(number[2]),2) || pow(stoi(number[2]),2) == pow(stoi(number[0]),2) + pow(stoi(number[1]),2)) return true;
-            return false;
-        }
         if (checkprime(maxhp)){knight->knightType = PALADIN;}
         else if (maxhp == 888){knight->knightType = LANCELOT;}
         else if (checkpythagoras(maxhp)) {knight->knightType = DRAGON;}
@@ -68,7 +69,7 @@ public:
     
     string toString() const;
 };
-
+//dinh nghia lai fight cho dong nay
 class PaladinKnight : public BaseKnight {
 
 };
