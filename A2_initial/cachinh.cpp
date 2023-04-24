@@ -139,7 +139,15 @@ class ArmyKnights {
 private:
     int knightnum;
     BaseKnight **knightarray;
+    bool shield=false, spear=false, hair=false, sword=false;
 public:
+// mong la dc 
+    void UpdateTreasure (int &event){
+        if (event==95) shield = true;
+        else if (event==96) spear = true;
+         else if (event==97) hair = true;
+        else if (event==98) sword = true;
+    }
     ArmyKnights (const string & file_armyknights);
     ~ArmyKnights();
     bool fight(BaseOpponent * opponent);
@@ -277,6 +285,27 @@ ArmyKnights::~ArmyKnights(){
 }
 bool ArmyKnights::fight(BaseOpponent * opponent){
     
+}
+bool ArmyKnights::adventure(Events * events){
+    
+}
+int ArmyKnights::count() const{
+    return knightnum; // neu chet thi -1
+}
+BaseKnight * ArmyKnights::lastKnight() const{
+    return knightarray[knightnum-1];
+}
+bool ArmyKnights::hasExcaliburSword() const{
+    return sword;
+}
+bool ArmyKnights::hasGuinevereHair() const{
+    return hair;
+}
+bool ArmyKnights::hasLancelotSpear() const{
+    return spear;
+}
+bool ArmyKnights::hasPaladinShield() const{
+    return shield;
 }
 /* * * END implementation of class ArmyKnights * * */
 
