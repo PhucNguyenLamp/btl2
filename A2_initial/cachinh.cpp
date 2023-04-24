@@ -49,7 +49,6 @@ protected:
     int phoenixdownI;
     BaseBag * bag; // tui doi, 5.6
     KnightType knightType; // loai hiep si
-
 public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
@@ -77,10 +76,12 @@ public:
     KnightType getknightType() const{
         return knightType;
     };
-    virtual bool fight(BaseOpponent * opponent);
+    virtual void fight(BaseOpponent * opponent); //them cho ngựa 🐴🦄
+    ~BaseKnight();
 };
 //dinh nghia lai fight cho dong nay
 class PaladinKnight : public BaseKnight {
+    public:
     PaladinKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
         this->id = id;
         this->maxhp = maxhp;
@@ -91,8 +92,10 @@ class PaladinKnight : public BaseKnight {
         bag = new BaseBag;
         this->knightType = PALADIN;
     }
+    void fight(BaseOpponent * opponent);
 };
 class LancelotKnight : public BaseKnight {
+        public:
         LancelotKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
         this->id = id;
         this->maxhp = maxhp;
@@ -105,6 +108,7 @@ class LancelotKnight : public BaseKnight {
         }
 };
 class DragonKnight : public BaseKnight {
+        public:
         DragonKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
         this->id = id;
         this->maxhp = maxhp;
@@ -117,6 +121,7 @@ class DragonKnight : public BaseKnight {
     }
 };
 class NormalKnight : public BaseKnight {
+        public:
         NormalKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
         this->id = id;
         this->maxhp = maxhp;
@@ -132,51 +137,25 @@ class NormalKnight : public BaseKnight {
 
 class ArmyKnights {
 private:
-    int **knightNo;
-    string line;
-    int numberofKnights;
-    int paladinshield=0, lancelotspear=0, GuinevereHair=0,ExcaliburSword=0;
-    BaseKnight **knightarray = new BaseKnight*[numberofKnights];
-public: 
+    int knightnum;
+    BaseKnight **knightarray;
+public:
     ArmyKnights (const string & file_armyknights);
     ~ArmyKnights();
-    //danh nhau
-    bool fight(BaseOpponent * opponent){
-        // if (hiep si con lai dead) return false;
-        // else return true;
-        return true; //cho no dep
-    };
+    bool fight(BaseOpponent * opponent);
     bool adventure (Events * events);
-    int count() const{
-        return 2; //them dai vao cho het loi
-    };
-    BaseKnight * lastKnight() const{
-        // if (ko con hiep si) return nullptr;
-        // else return hiep si cuoi cung;
-        return nullptr; //cho no dep
-    };
-    
-    bool hasPaladinShield() const{
-        if (paladinshield>0) return true;
-        else return false;
-    };
-    bool hasLancelotSpear() const{
-        if (lancelotspear>0) return true;
-        else return false;
-    };
-    
-    bool hasGuinevereHair() const{
-        if (GuinevereHair>0) return true;
-        else return false;
-    };
-    bool hasExcaliburSword() const{
-        if (ExcaliburSword>0) return true;
-        else return false;
-    };
+    int count() const;
+    BaseKnight * lastKnight() const;
+
+    bool hasPaladinShield() const;
+    bool hasLancelotSpear() const;
+    bool hasGuinevereHair() const;
+    bool hasExcaliburSword() const;
 
     void printInfo() const;
     void printResult(bool win) const;
 };
+
 
 class BaseItem {
 public:
@@ -257,28 +236,11 @@ BaseKnight * BaseKnight::create(int id, int maxhp, int level, int gil, int antid
 }
 BaseKnight::~BaseKnight() {
     delete bag;
+    bag = nullptr;
 }
 /* * * END implementation of class BaseKnight * * */
 
 /* * * BEGIN implementation of class ArmyKnights * * */
-ArmyKnights::ArmyKnights(const string & file_armyknights) {
-        ifstream army(file_armyknights);
-        getline(army,line);
-        numberofKnights = stoi(line);
-        // tao mang knights
-        
-        for (int i=0; i< numberofKnights;i++){
-            knightarray[i] = new BaseKnight();
-            cin >> knightarray[i]->maxhp >> knightarray[i]->level >> knightarray[i]->phoenixdownI >> knightarray[i]->gil >>knightarray[i]->antidote;
-            knightarray[i]->hp = knightarray[i]->maxhp;
-        }
-    };
-ArmyKnights::~ArmyKnights() {
-        for (int i=0; i< numberofKnights;i++){
-            delete knightarray[i];
-        }
-        delete [] knightarray;
-    };
 void ArmyKnights::printInfo() const {
     cout << "No. knights: " << this->count();
     if (this->count() > 0) {
@@ -296,7 +258,26 @@ void ArmyKnights::printInfo() const {
 void ArmyKnights::printResult(bool win) const {
     cout << (win ? "WIN" : "LOSE") << endl;
 }
-
+ArmyKnights::ArmyKnights(const string & file_armyknights) {
+    ifstream ifs(file_armyknights);
+    ifs >> knightnum;
+    knightarray = new BaseKnight*[knightnum];
+    int id, maxhp, level, gil, antidote, phoenixdownI;
+    for (int i=0; i< knightnum; i++){
+        ifs >> id >> maxhp >> level >> gil >> antidote >> phoenixdownI;
+        knightarray[i] = BaseKnight::create(id, maxhp, level, gil, antidote, phoenixdownI);
+    }
+}
+ArmyKnights::~ArmyKnights(){
+    for (int i=0; i< knightnum; i++){
+        delete knightarray[i];
+    }
+    delete[] knightarray;
+    knightarray = nullptr;
+}
+bool ArmyKnights::fight(BaseOpponent * opponent){
+    
+}
 /* * * END implementation of class ArmyKnights * * */
 
 /* * * BEGIN implementation of class KnightAdventure * * */
