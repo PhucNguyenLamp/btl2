@@ -8,7 +8,23 @@
 using namespace std;
 
 ///TODO: knight2.h
-enum ItemType {/* TODO: */};
+bool checkprime(int n){
+    if (n < 2) return false;
+    for (int i = 2; i <= sqrt(n); i++){
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+bool checkpythagoras(int number){
+    if (number<100) return false; // hp max 999
+    int a = pow(number/100,2);
+    int b = pow(number/10%10,2);
+    int c = pow(number%10,2);
+    if (a==b+c || b==a+c || c==a+b) return true;
+    return false;
+}
+
+enum ItemType {/* TODO: */ ANTIDODE = 0, PHOENIXDOWNI, PHOENIXDOWNII, PHOENIXDOWNIII, PHOENIXDOWNIV };
 class BaseItem;
 class Events;
 class BaseBag {
@@ -30,73 +46,133 @@ protected:
     int level;
     int gil; // tien
     int antidote;
+    int phoenixdownI;
     BaseBag * bag; // tui doi, 5.6
     KnightType knightType; // loai hiep si
 
 public:
-        static bool checkprime(int n){
-            if (n < 2) return false;
-            for (int i = 2; i <= sqrt(n); i++){
-                if (n % i == 0) return false;
-            }
-            return true;
-        }
-        static bool checkpythagoras(int number){
-            if (number<100) return false; // hp co lon hon 1000 dc ko?
-            int a = pow(number/100,2);
-            int b = pow(number/10%10,2);
-            int c = pow(number%10,2);
-            if (a==b+c || b==a+c || c==a+b) return true;
-            return false;
-        }
-    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
-        BaseKnight *knight = new BaseKnight();
-        knight->id = id;
-        knight->hp = maxhp;
-        knight->maxhp = maxhp;
-        knight->level = level;
-        knight->gil = gil;
-        knight->antidote = antidote;
-        knight->bag = new BaseBag();
-        knight->knightType = NORMAL;
-        if (checkprime(maxhp)){knight->knightType = PALADIN;}
-        else if (maxhp == 888){knight->knightType = LANCELOT;}
-        else if (checkpythagoras(maxhp)) {knight->knightType = DRAGON;}
-        else knight->knightType = NORMAL;
-        return knight;
-
-    }; // static nen ko can khai obj de call
-    
+    static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
+    int getid() const{
+        return id;
+    };
+    int gethp() const{
+        return hp;
+    };
+    int getmaxhp() const{
+        return maxhp;
+    };
+    int getlevel() const{
+        return level;
+    };
+    int getgil() const{
+        return gil;
+    };
+    int getantidote() const{
+        return antidote;
+    };
+    int getphoenixdownI() const{
+        return phoenixdownI;
+    };
+    KnightType getknightType() const{
+        return knightType;
+    };
+    virtual bool fight(BaseOpponent * opponent);
 };
 //dinh nghia lai fight cho dong nay
 class PaladinKnight : public BaseKnight {
-
+    PaladinKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+        this->id = id;
+        this->maxhp = maxhp;
+        this->hp = maxhp;
+        this->level = level;
+        this->gil = gil;
+        this->antidote = antidote;
+        bag = new BaseBag;
+        this->knightType = PALADIN;
+    }
 };
 class LancelotKnight : public BaseKnight {
-
+        LancelotKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+        this->id = id;
+        this->maxhp = maxhp;
+        this->hp = maxhp;
+        this->level = level;
+        this->gil = gil;
+        this->antidote = antidote;
+        bag = new BaseBag;
+        this->knightType = LANCELOT;
+        }
 };
 class DragonKnight : public BaseKnight {
-
+        DragonKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+        this->id = id;
+        this->maxhp = maxhp;
+        this->hp = maxhp;
+        this->level = level;
+        this->gil = gil;
+        this->antidote = antidote;
+        bag = new BaseBag;  
+        this->knightType = DRAGON;
+    }
 };
 class NormalKnight : public BaseKnight {
-
+        NormalKnight(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+        this->id = id;
+        this->maxhp = maxhp;
+        this->hp = maxhp;
+        this->level = level;
+        this->gil = gil;
+        this->antidote = antidote;
+        bag = new BaseBag;
+        this->knightType = NORMAL;
+        }
 };
 
 
 class ArmyKnights {
-public:
+private:
+    int **knightNo;
+    string line;
+    int numberofKnights;
+    int paladinshield=0, lancelotspear=0, GuinevereHair=0,ExcaliburSword=0;
+    BaseKnight **knightarray = new BaseKnight*[numberofKnights];
+public: 
     ArmyKnights (const string & file_armyknights);
     ~ArmyKnights();
-    bool fight(BaseOpponent * opponent);
+    //danh nhau
+    bool fight(BaseOpponent * opponent){
+        // if (hiep si con lai dead) return false;
+        // else return true;
+        return true; //cho no dep
+    };
     bool adventure (Events * events);
-    int count() const;
-    BaseKnight * lastKnight() const;
-
-    bool hasPaladinShield() const;
-    bool hasLancelotSpear() const;
-    bool hasGuinevereHair() const;
-    bool hasExcaliburSword() const;
+    int count() const{
+        return 2; //them dai vao cho het loi
+    };
+    BaseKnight * lastKnight() const{
+        // if (ko con hiep si) return nullptr;
+        // else return hiep si cuoi cung;
+        return nullptr; //cho no dep
+    };
+    
+    bool hasPaladinShield() const{
+        if (paladinshield>0) return true;
+        else return false;
+    };
+    bool hasLancelotSpear() const{
+        if (lancelotspear>0) return true;
+        else return false;
+    };
+    
+    bool hasGuinevereHair() const{
+        if (GuinevereHair>0) return true;
+        else return false;
+    };
+    bool hasExcaliburSword() const{
+        if (ExcaliburSword>0) return true;
+        else return false;
+    };
 
     void printInfo() const;
     void printResult(bool win) const;
@@ -117,7 +193,7 @@ public:
         return eventsNum;
     };
     int get(int i) const {
-        return arr[i];
+        return arr[i]; //dem tu 0
     };
     //todo cua tui hihi
     Events(const string & file_events){
@@ -129,6 +205,7 @@ public:
     };
     ~Events(){
         delete[] arr;
+        arr = nullptr;
     };
 };
 
@@ -139,7 +216,10 @@ private:
 
 public:
     KnightAdventure();
-    ~KnightAdventure(); // TODO:
+    ~KnightAdventure(){
+        delete armyKnights;
+        delete events;
+    }; // TODO:
 
     void loadArmyKnights(const string &);
     void loadEvents(const string &);
@@ -168,10 +248,37 @@ string BaseKnight::toString() const {
         + "]";
     return s;
 }
-
+BaseKnight * BaseKnight::create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+    BaseKnight *knightType = new BaseKnight;
+    if (checkprime(maxhp)) knightType = new PaladinKnight(id, maxhp, level, gil, antidote, phoenixdownI);
+    else if (maxhp = 888) knightType = new LancelotKnight(id, maxhp, level, gil, antidote, phoenixdownI);
+    else if (checkpythagoras(maxhp)) knightType = new DragonKnight(id, maxhp, level, gil, antidote, phoenixdownI);
+    else knightType = new NormalKnight(id, maxhp, level, gil, antidote, phoenixdownI);
+}
+BaseKnight::~BaseKnight() {
+    delete bag;
+}
 /* * * END implementation of class BaseKnight * * */
 
 /* * * BEGIN implementation of class ArmyKnights * * */
+ArmyKnights::ArmyKnights(const string & file_armyknights) {
+        ifstream army(file_armyknights);
+        getline(army,line);
+        numberofKnights = stoi(line);
+        // tao mang knights
+        
+        for (int i=0; i< numberofKnights;i++){
+            knightarray[i] = new BaseKnight();
+            cin >> knightarray[i]->maxhp >> knightarray[i]->level >> knightarray[i]->phoenixdownI >> knightarray[i]->gil >>knightarray[i]->antidote;
+            knightarray[i]->hp = knightarray[i]->maxhp;
+        }
+    };
+ArmyKnights::~ArmyKnights() {
+        for (int i=0; i< numberofKnights;i++){
+            delete knightarray[i];
+        }
+        delete [] knightarray;
+    };
 void ArmyKnights::printInfo() const {
     cout << "No. knights: " << this->count();
     if (this->count() > 0) {
@@ -197,8 +304,23 @@ KnightAdventure::KnightAdventure() {
     armyKnights = nullptr;
     events = nullptr;
 }
-
+void KnightAdventure::loadArmyKnights(const string & file_armyknights) {
+    armyKnights = new ArmyKnights(file_armyknights);
+};
+void KnightAdventure::loadEvents(const string & file_events) {
+    events = new Events(file_events);
+};
+void KnightAdventure::run() {
+    
+};
 /* * * END implementation of class KnightAdventure * * */
+       
+
+
+
+
+
+
 
 ///main.cpp
 int main(int argc, char ** argv) {
@@ -215,7 +337,6 @@ int main(int argc, char ** argv) {
         cout << "Error number of arguments" << endl;
         exit(1);
     }
-    
     // BEBGIN
     KnightAdventure * knightAdventure = new KnightAdventure();
     knightAdventure->loadArmyKnights(file_armyknights);

@@ -1,34 +1,29 @@
 #include <iostream>
 using namespace std;
 
-class Counter {
-private:
-  static int count; // Static data member to keep track of count
-public:
-  Counter() {
-    count++; // Increment count when object is created
-  }
+float add (float a, float b){
+  return a+b;
+}
+float sub (float a, float b){
+  return a-b;
+}
+float mul (float a, float b){
+  return a*b;
+}
+float div (float a, float b){
+  return a/b;
+}
 
-  static int getCount() {
-    return count; // Static function to get the count
-  }
-};
+typedef float (*myfloat)(float, float);
+int main(){
+  myfloat list[] = {add, sub, mul, div};
+  char opid[256];
+  opid['+'] = 0;
+  opid['-'] = 1;
+  opid['*'] = 2;
+  opid['/'] = 3;
 
-// Initialize static data member
-int Counter::count = 0;
 
-int main() {
-  // Create objects of Counter class
-  Counter obj1;
-  Counter obj2;
-  Counter obj3;
-
-  // Call static function to get count of objects
-  cout << "Number of objects created: " << Counter::getCount() << endl;
 
   return 0;
 }
-
-
-
-
