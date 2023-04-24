@@ -34,7 +34,9 @@ public:
     virtual string toString() const;
 };
 
-class BaseOpponent;
+class BaseOpponent{
+    
+};
 
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };
 class BaseKnight {
@@ -52,6 +54,9 @@ protected:
 public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
+    void updatehp(int hp){
+        this->hp = hp;
+    }
     int getid() const{
         return id;
     };
@@ -145,8 +150,8 @@ public:
     void UpdateTreasure (int &event){
         if (event==95) shield = true;
         else if (event==96) spear = true;
-         else if (event==97) hair = true;
-        else if (event==98) sword = true;
+        else if (event==97) hair = true;
+        else if (event==98&&spear==true&&hair==true&&shield==true) sword = true;
     }
     ArmyKnights (const string & file_armyknights);
     ~ArmyKnights();
@@ -169,6 +174,60 @@ class BaseItem {
 public:
     virtual bool canUse ( BaseKnight * knight ) = 0;
     virtual void use ( BaseKnight * knight ) = 0;
+};
+
+class Antidote : public BaseItem {
+    bool canUse ( BaseKnight * knight ){
+       // if (poison) return true;
+        // return false; 
+    }
+    void use ( BaseKnight * knight ){
+        // antidode--;
+    }
+};
+class PhoenixDownI : public BaseItem {
+    bool canUse ( BaseKnight * knight ){
+        if (knight->gethp()<=0) return true;
+        // return false; 
+    }
+    void use ( BaseKnight * knight ){
+        knight->updatehp(knight->getmaxhp());
+        // phoenixdownI--;
+        
+    }
+};
+class PhoenixDownII : public BaseItem {
+    bool canUse ( BaseKnight * knight ){
+        if (knight->gethp()<knight->getmaxhp()/4) return true;
+        return false; 
+    }
+    void use ( BaseKnight * knight ){
+        knight->updatehp(knight->getmaxhp());
+        // phoenixdownII--;
+        
+    }
+};
+class PhoenixDownIII : public BaseItem {
+    bool canUse ( BaseKnight * knight ){
+        if (knight->gethp()<knight->getmaxhp()/3) return true;
+        return false; 
+    }
+    void use ( BaseKnight * knight ){
+        if (knight->gethp()<=0) knight->updatehp(knight->getmaxhp()/3);
+        else knight->updatehp(knight->gethp() + knight->getmaxhp()/4);
+        // phoenixdownIII--;
+    }
+};
+class PhoenixDownIV : public BaseItem {
+    bool canUse ( BaseKnight * knight ){
+        if (knight->gethp()<knight->getmaxhp()/2) return true;
+        return false; 
+    }
+    void use ( BaseKnight * knight ){
+        if (knight->gethp()<=0) knight->updatehp(knight->getmaxhp()/2);
+        else knight->updatehp(knight->gethp() + knight->getmaxhp()/5);
+        // phoenixdownIV--;
+    }
 };
 
 class Events {
@@ -284,16 +343,23 @@ ArmyKnights::~ArmyKnights(){
     knightarray = nullptr;
 }
 bool ArmyKnights::fight(BaseOpponent * opponent){
-    
+    // doi lam sau
 }
 bool ArmyKnights::adventure(Events * events){
-    
+    int eventNum;
+    for (int i=0; i< events->count(); i++){
+        eventNum = events->get(i);
+    // fight(eventNum);
+    // use item();
+    printInfo();
+    }
+    if (knightnum<=0) return false; else return true;
 }
 int ArmyKnights::count() const{
-    return knightnum; // neu chet thi -1
+     return knightnum; // neu chet thi -1
 }
 BaseKnight * ArmyKnights::lastKnight() const{
-    return knightarray[knightnum-1];
+    if (knightnum<=0) return nullptr; else return knightarray[knightnum-1];
 }
 bool ArmyKnights::hasExcaliburSword() const{
     return sword;
